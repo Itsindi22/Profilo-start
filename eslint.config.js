@@ -1,29 +1,27 @@
 import js from '@eslint/js'
-import globals from 'globals'
+import globals, { browser } from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import { version } from 'react'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
+module.exports = {
+  root:true,
+  env: { browser: true, es2020: true},
+  extends: [
+    'es.lint:recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended',
+  ], 
+  ignorePatterns: ['dist','.eslintrc.cjs', 'src'],
+    parserOptions: {ecmaVersion: 'latest', SourceType: 'module'},
+    settings: {react: {version: '18.2'}},
+  plugins: ['react-refresh'],
+  rules: {
+
+    'react-refresh/only-export-components': [
+      'warn',
+      {allowConstantExport : true },
     ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
-    },
-    rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-    },
   },
-])
+}
