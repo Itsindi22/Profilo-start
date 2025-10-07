@@ -4,4 +4,4 @@ import Project from './/Project'
 import Contact from './Contact'
 
 
-export {Home,About,Project,Contact};333333
+export {Home,About,Project,Contact};
