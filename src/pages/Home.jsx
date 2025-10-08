@@ -1,13 +1,13 @@
 import { useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Sky } from "@react-three/drei"; // ✅ Add this import
+
+import Island from '../models/island'
+import Sky from "../models/Sky";
 import Loader from "../components/Loader";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";;
 
 
-import Island from '../models/island'
-import sky from "../models/Skys";
 
 
 // <div className="absolute top-28 left-0 right -0 z-10 flex
@@ -17,6 +17,7 @@ import sky from "../models/Skys";
 
 const Home = () => {
     const [isRotating, setIsRotating] = useState (true );
+    const [CurrentStage,setCurrentStage] =useState(1)
   
     const adjustIslandForScreenSize = () => {
     let screenScale = null
@@ -74,6 +75,7 @@ const Home = () => {
             rotation={islandRotation}
             isRotating={isRotating}
             setIsRotating={setIsRotating}
+            setCurrentStage={setCurrentStage}
           />
           <Plane
           isRotating={isRotating}

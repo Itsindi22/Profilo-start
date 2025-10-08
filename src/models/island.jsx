@@ -15,6 +15,7 @@ import { a } from '@react-spring/three'
 
 import islandScene from '../assets/3d/island.glb'
 
+
 const Island = ( {isRotating, setIsRotating, ...props}) => {
   const islandRef = useRef()
 
@@ -34,7 +35,7 @@ const Island = ( {isRotating, setIsRotating, ...props}) => {
     ? e.touches[0].clientX 
     : e.clientX;  
 
-    last.current = clientX;
+    lastX.current = clientX;
   }
 
     const handlePointerUp = (e) => {
