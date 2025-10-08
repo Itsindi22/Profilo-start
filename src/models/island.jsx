@@ -15,16 +15,24 @@ import { a } from '@react-spring/three'
 
 import islandScene from '../assets/3d/island.glb'
 
+export function Island({
+  isRotating,
+  setIsRotating,
+  setCurrentStage,
+  currentFocusPoint,
+  ...props
+}) {
+  const islandRef = useRef();
+  // Get access to the Three.js renderer and viewport
+  const { gl, viewport } = useThree();
+  const { nodes, materials } = useGLTF(islandScene);
 
-const Island = ( {isRotating, setIsRotating, ...props}) => {
-  const islandRef = useRef()
-
-  const { gl, viewport} = useThree();
-  const { nodes, materials } = useGLTF(islandScene)
-  
+  // Use a ref for the last mouse x position
   const lastX = useRef(0);
+  // Use a ref for rotation speed
   const rotationSpeed = useRef(0);
-  const DampingFactor = 0.95;
+  // Define a damping factor to control rotation damping
+  const dampingFactor = 0.95;
 
   const handlePointerDown = (e) => {
     e.stopPropagation();
@@ -46,40 +54,47 @@ const Island = ( {isRotating, setIsRotating, ...props}) => {
 
 
   }  
-  const handlePointerMove = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setIsRotating(true)
+  const handlePointerMove = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    if (isRotating) {
+      // If rotation is enabled, calculate the change in clientX position
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
 
-    if(isRotating) {
-       const clientX = e.touches 
-    ? e.touches[0].clientX 
-    : e.clientX;  
+      // calculate the change in the horizontal position of the mouse cursor or touch input,
+      // relative to the viewport's width
+      const delta = (clientX - lastX.current) / viewport.width;
 
-    const delta = (clientX -lastX.current) /viewport.width
+      // Update the island's rotation based on the mouse/touch movement
+      islandRef.current.rotation.y += delta * 0.01 * Math.PI;
 
-    islandRef.current.rotation.y += delta * 0.01 * Math.PI;
-    lastX.current = clientX;
-    rotationSpeed.current = delta * 0.01 * Math.PI;
+      // Update the reference for the last clientX position
+      lastX.current = clientX;
+
+      // Update the rotation speed
+      rotationSpeed.current = delta * 0.01 * Math.PI;
     }
-    
-  }
+  };
+  // Handle keydown events
+  const handleKeyUp = (e) => {
+     if(e.key === 'ArrowLeft'  || e.key === 'ArrowRight') {
+       setIsRotating(false);
+     }
+   }
 
-  const handleKeyDown = (e) => {
-    if(e.key === 'ArrowLeft') {
-      if(!isRotating) setIsRotating(true);
-      islandRef.current.rotation.y += 0.01 * Math.PI;
-
-    } else if (e.key === 'ArrowRight') {
+  const handleKeyDown = (event) => {
+    if (event.key === "ArrowLeft") {
       if (!isRotating) setIsRotating(true);
-      islandRef.current.rotation -= 0.01 * Math.PI;
+
+      islandRef.current.rotation.y += 0.005 * Math.PI;
+      rotationSpeed.current = 0.007;
+    } else if (event.key === "ArrowRight") {
+      if (!isRotating) setIsRotating(true);
+
+      islandRef.current.rotation.y -= 0.005 * Math.PI;
+      rotationSpeed.current = -0.007;
     }
-  }
- const handleKeyUp = (e) => {
-    if(e.key === 'ArrowLeft'  || e.key === 'ArrowRight') {
-      setIsRotating(false);
-    }
-  }
+  };
 
 useFrame(() => {
 if(!isRotating) {
