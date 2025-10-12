@@ -22,8 +22,7 @@ const {alert,showAlert,hideAlert} =useAlert();
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleFocus = () =>  setCurrentAnimation('walk')
-  const handleBlur = () => setCurrentAnimation('idle');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -66,7 +65,9 @@ const {alert,showAlert,hideAlert} =useAlert();
         })
       });
   };
-
+  const handleFocus = () =>  setCurrentAnimation('walk')
+  const handleBlur = () => setCurrentAnimation('idle');
+ 
   return (
     <section className="relative flex Lg:flex-row flex-col max-container">
       {alert.show && <Alert {...alert}/>}
