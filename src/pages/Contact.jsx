@@ -30,7 +30,7 @@ const {alert,showAlert,hideAlert} =useAlert();
   
     emailjs
       .send(
-        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID, // ✅ fixed key name
+        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID, 
         import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
         {
           from_name: form.name,
@@ -50,7 +50,7 @@ const {alert,showAlert,hideAlert} =useAlert();
         // TODO: HIDE alert
 
         setTimeout(() => {
-          hideAlert();
+          hideAlert(false);
           setCurrentAnimation('idle')
           setForm({name: '',email:'',message: ''})
         },[3000])
@@ -65,12 +65,15 @@ const {alert,showAlert,hideAlert} =useAlert();
         })
       });
   };
+
   const handleFocus = () =>  setCurrentAnimation('walk')
   const handleBlur = () => setCurrentAnimation('idle');
  
+
+
   return (
-    <section className="relative flex Lg:flex-row flex-col max-container">
-      {alert.show && <Alert {...alert}/>}
+        <section className='relative flex lg:flex-row flex-col max-container'>
+     {alert.show && <Alert {...alert}/>}
       
       <div className="flex-1 main-w-[50%] flex flex-col">
         <h1 className="head-text">Get in Touch</h1>
@@ -136,22 +139,29 @@ const {alert,showAlert,hideAlert} =useAlert();
           </button>
         </form>
       </div>
-
-      <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
-        <Canvas camera={{ position: [0, 0, 5], 
+      <div className='lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]'>
+     <Canvas camera={{ position: [0, 0, 5], 
         fov: 75,
-        near: 0.01,
-        far: 1000
+        near: 0.1,
+        far: 1000,
         }}
         >
-          <directionalLight intensity={2.5} position={[0,0,1]} />
-          <ambientLight intensity={0.5} />
+          <directionalLight position={[0,0,1]} intensity={2.5}  />
+          <ambientLight intensity={1} />
+         <pointLight position={[5, 10, 0]} intensity={2} />
+
+         <spotLight
+            position={[10, 10, 10]}
+            angle={0.15}
+            penumbra={1}
+            intensity={2}
+          />
 
           <Suspense fallback={<Loader />}>
             <Fox
             currentAnimation={currentAnimation}
               position={[0.5, 0.35, 0]}
-              rotation={[12.6, -0.6, 0]}
+              rotation={[12.629, -0.6, 0]}
               scale={[0.5, 0.5, 0.5]}
             />
           </Suspense>
